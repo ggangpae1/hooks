@@ -3,6 +3,7 @@ import React, {useState, useRef} from 'react';
 import UserList from "./components/UserList";
 import CreateUser from "./components/CreateUser";
 
+import Counter from './components/Counter';
 function App() {
   /*
   const [username, setUsername] = useState('');
@@ -28,11 +29,23 @@ function App() {
   }
 
 
+  //데이터를 만드는 부분
   const [users, setUsers] = useState([
-    {id:1, username:"시모나", email:"simona@kakao.com"},
-    {id:2, username:"카푸치노", email:"cappuccino@kakao.com"},
-    {id:3, username:"핑크루비", email:"pinkruby@kakao.com"},
+    {id:1, username:"시모나", email:"simona@kakao.com", active: true},
+    {id:2, username:"카푸치노", email:"cappuccino@kakao.com", active: false},
+    {id:3, username:"핑크루비", email:"pinkruby@kakao.com", active:false},
   ]);
+
+  //데이터 수정을 위한 함수: id를 매개변수로 받아서 id에 해당하는 데이터의
+  //active 값을 토글하는 함수
+  //react에서 state는 setter로 수정해야 하고
+  //배열이나 객체는 복제해서 작업을 수행한 후 다시 대입
+  const onToggle = (id) => {
+    setUsers(
+      users.map((user) => user.id === id ? {...user, active:!user.active} : user
+      )
+    )
+  }
 
   //id를 설정하기 위한 변수
   const nextId = useRef(4);
@@ -72,9 +85,10 @@ function App() {
 
   return (
     <>
+     <Counter />
      <CreateUser username={username} email={email} onChange={onChange}
      onCreate={onCreate} />
-     <UserList users={users} onRemove={onRemove}/>
+     <UserList users={users} onRemove={onRemove} onToggle={onToggle}/>
     </>
   );
 }
